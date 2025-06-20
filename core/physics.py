@@ -1,6 +1,14 @@
 import math
-from core.config import FORCE_COEFFICIENT
+from core.config import PARTICLE_TYPES, INTERACTION_VALUES
 
+def get_interaction(type1, type2):
+    try:
+        i = PARTICLE_TYPES.index(type1)
+        j = PARTICLE_TYPES.index(type2)
+        return INTERACTION_VALUES[i][j]
+    except ValueError:
+        return 0  # Không tương tác
+    
 def resolve_collision(p1, p2):
     dx = p2.x - p1.x
     dy = p2.y - p1.y
@@ -37,19 +45,19 @@ def resolve_collision(p1, p2):
         p2.y += correction * ny
 
 
-
-def compute_repulsion(p1, p2, repulsion_distance):
+# interaction_strength > 0 repulsion, otherwise attraction
+def compute_force(p1, p2, interaction_strength, interaction_distance):
     dx = p2.x - p1.x
     dy = p2.y - p1.y
+    
     dist = math.hypot(dx, dy)
-
-    if 0 < dist < repulsion_distance:
+    if 0 < dist < interaction_distance:
         # Vector đơn vị từ p1 đến p2
         nx = dx / dist
         ny = dy / dist
 
         # Lực đẩy giảm theo khoảng cách (kiểu F = k / r^2)
-        k = FORCE_COEFFICIENT  # hệ số lực, bạn có thể điều chỉnh
+        k = interaction_strength  # hệ số lực, bạn có thể điều chỉnh
         force = k / (dist ** 2)
 
         # Áp dụng Newton III: lực ngược chiều trên 2 vật
@@ -59,3 +67,4 @@ def compute_repulsion(p1, p2, repulsion_distance):
         # Từ F = m·a => a = F / m
         p1.apply_force(-fx, -fy)
         p2.apply_force(fx, fy)
+        
