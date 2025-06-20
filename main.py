@@ -39,13 +39,6 @@ while running:
                 
                 ## repulsion force
                 compute_repulsion(p1, p2, REPULSION_DISTANCE)
-                # fx, fy = compute_repulsion(p1, p2, REPULSION_DISTANCE)
-                # total_fx += fx
-                # total_fy += fy
-        # p1.apply_force(total_fx, total_fy)
-        # for j in range(i + 1, len(particles)):
-        #     p2 = particles[j]
-        #     resolve_collision(p1, p2)
     
     for p in particles:
         p.update()
